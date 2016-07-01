@@ -21,14 +21,61 @@
         </encoder>
     </appender>
 
-    <logger name="test" level="INFO" additivity="false"><!--name表示所要打日志的包名-->
-        <appender-ref ref="FILE" />
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/error-%d{yyyy-MM-dd_HH}.zip</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %thread %X{invokeNo} %logger{40} %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/debug-%d{yyyy-MM-dd_HH}.zip</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %thread %X{invokeNo} %logger{40} %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印DEBUG日志 -->
+            <level>debug</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/info-%d{yyyy-MM-dd_HH}.zip</fileNamePattern><!--配置_HH表示一小时打一次包-->
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %thread %X{invokeNo} %logger{40} %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="com.logback.test" level="debug" additivity="false"><!--name表示所要打日志的包名,addtivity 表示是否向上级 loger 传递打印信息。默认是true。-->
+        <!--<appender-ref ref="FILE" />-->
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="errorAppender" />
+        <appender-ref ref="debugAppender" />
+        <appender-ref ref="infoAppender" />
     </logger>
 
-    <root level="WARN">
+    <root level="debug">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+       <!-- <appender-ref ref="FILE" />-->
     </root>
 
 </configuration>

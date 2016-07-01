@@ -12,17 +12,27 @@ public class LogbackTest {
     private static final Logger logger= LoggerFactory.getLogger(LogbackTest.class);
 
     public static void main(String[] args){
-        if(logger.isDebugEnabled()){
-            logger.debug("slf4j-logback debug message");
-        }
-        if(logger.isInfoEnabled()){
-            logger.debug("slf4j-logback info message");
-        }
-        if(logger.isTraceEnabled()){
-            logger.debug("slf4j-logback trace message");
-        }
 
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        StatusPrinter.print(lc);
+        for (int i=0;i<10000;i++){
+            logger.info("{}",i);
+            logger.error("");
+            logger.debug("");
+            logger.trace("");
+            logger.warn("");
+
+        }
     }
+//        if(logger.isDebugEnabled()){
+//            logger.debug("slf4j-logback debug message");
+//        }
+//        if(logger.isInfoEnabled()){
+//            logger.debug("slf4j-logback info message");
+//        }
+//        if(logger.isTraceEnabled()){
+//            logger.debug("slf4j-logback trace message");
+//        }
+//
+//        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+//        StatusPrinter.print(lc);
+//    }
 }
