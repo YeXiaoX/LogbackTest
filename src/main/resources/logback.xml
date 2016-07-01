@@ -11,9 +11,9 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>log/txlog.txt</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>log/txlog-%d{yyyy-MM-dd}.%i.txt.zip</fileNamePattern>
+            <fileNamePattern>log/txlog-%d{yyyy-MM-dd_HH}.%i.txt.zip</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>20KB</maxFileSize><!--当日志文件超过最大size时就会自动打包-->
+                <maxFileSize>2KB</maxFileSize><!--当日志文件超过最大size时就会自动打包-->
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
@@ -24,7 +24,7 @@
     <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/error-%d{yyyy-MM-dd_HH}.zip</fileNamePattern>
+            <fileNamePattern>logs/error-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %thread %X{invokeNo} %logger{40} %msg%n</pattern>
@@ -39,7 +39,7 @@
     <appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/debug-%d{yyyy-MM-dd_HH}.zip</fileNamePattern>
+            <fileNamePattern>logs/debug-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %thread %X{invokeNo} %logger{40} %msg%n</pattern>
@@ -64,18 +64,26 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender"><!--配置异步打印info信息-->
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <appender-ref ref="infoAppender" />
+    </appender>
 
-    <logger name="com.logback.test" level="debug" additivity="false"><!--name表示所要打日志的包名,addtivity 表示是否向上级 loger 传递打印信息。默认是true。-->
+    <logger name="com.logback.test1" level="debug" additivity="false"><!--name表示所要打日志的包名,addtivity 表示是否向上级 loger 传递打印信息。默认是true。-->
         <!--<appender-ref ref="FILE" />-->
         <appender-ref ref="STDOUT" />
         <appender-ref ref="errorAppender" />
         <appender-ref ref="debugAppender" />
-        <appender-ref ref="infoAppender" />
-    </logger>
+        <appender-ref ref="ASYNC" />
+    </logger><!--指定打印某一个包或者类里的日志，如果该包或者类不存在则无用-->
 
-    <root level="debug">
+    <root level="debug"><!--指定所有要执行的appender-->
         <appender-ref ref="STDOUT" />
-       <!-- <appender-ref ref="FILE" />-->
+        <appender-ref ref="errorAppender" />
+        <appender-ref ref="debugAppender" />
+        <appender-ref ref="ASYNC" />
+       <appender-ref ref="FILE" />
     </root>
 
 </configuration>
